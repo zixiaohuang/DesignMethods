@@ -108,6 +108,7 @@ public:
 
 void main()
 {
+	//vector 里存放基类指针，指向派生类对象，实现动态转化
 	vector<Animal*> arrayAnimal;
 	Animal* cat1 = new MachineCat("叮当");
 	Animal* cat2 = new Cat();
