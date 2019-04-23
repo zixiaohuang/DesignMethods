@@ -16,7 +16,7 @@ protected:
 public:
     Operation() { _numberA = 0.0; _numberB = 0.0; };
     Operation(double a, double b) :_numberA(a), _numberB(b) {};
-    virtual ~Operation() {};//???��?�y????????????????????
+    virtual ~Operation() {};
     virtual double GetResult()
     {
         return result;
@@ -89,11 +89,11 @@ class OperationFactory
 public:
     static Operation* createOperate(const char operate)
     {
-        Operation* oper=NULL;//???????????????
+        Operation* oper=NULL;
         switch (operate)
         {
             case '+':
-                oper = new OperationAdd;//???????
+                oper = new OperationAdd;
                 break;
             case '-':
                 oper = new OperationSub;
@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
     double NumberB = 0.0;
     oper = OperationFactory::createOperate('+');
     oper->SetValue(NumberA, NumberB);
-    //oper:Operation(NumberA, NumberB); ??????��????????????????????????????????????????????
+    //oper:Operation(NumberA, NumberB); 需要定义赋值函数，不能用赋值构造函数
     double result = oper->GetResult();
     cout << result << endl;
     return 0;
