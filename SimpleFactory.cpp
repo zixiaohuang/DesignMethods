@@ -1,10 +1,6 @@
 //
 // Created by ken on 19-4-22.
 //
-/*简单工厂模式虽然简单,但系统需要引入新产品时,由于静态工厂方法通过所传入参数的
- *不同来创建不同的产品,必定要修改工厂类的源代码,违背了“开闭原则”
- *
- * */
 
 #include<cstdio>
 #include<iostream>
@@ -20,7 +16,7 @@ protected:
 public:
     Operation() { _numberA = 0.0; _numberB = 0.0; };
     Operation(double a, double b) :_numberA(a), _numberB(b) {};
-    virtual ~Operation() {};
+    virtual ~Operation() {};//???崿?鹹????????????????????
     virtual double GetResult()
     {
         return result;
@@ -82,61 +78,48 @@ public:
     {
         //double result = 0;
         if (_numberB == 0)
-            throw runtime_error("Division by zero condition!");
+            throw "Division by zero condition!";
         result = _numberA / _numberB;
         return result;
     }
 };
 
-//建立一个工厂接口,每添加一类只需要继承这个接口在后面添加，不需要修改原来的工厂函数
-//让子类决定实例化哪一个类,工厂方法使一个类的实例化延迟到其子类
-class IFactory
+class OperationFactory
 {
 public:
-    virtual Operation* CreateOperation(){};
-};
-
-class AddFactory : public IFactory
-{
-public:
-    Operation* CreateOperation() override
+    static Operation* createOperate(const char operate)
     {
-        return new OperationAdd;
-    }
-};
-
-class SubFactory : public IFactory
-{
-public:
-    Operation* CreateOperation() override
-    {
-        return new OperationSub;
-    }
-};
-
-class MulFactory : public IFactory
-{
-public:
-    Operation* CreateOperation() override
-    {
-        return new OperationMul;
-    }
-};
-
-class DivFactory : public IFactory
-{
-public:
-    Operation* CreateOperation() override
-    {
-        return new OperationDiv;
+        Operation* oper=NULL;//???????????????
+        switch (operate)
+        {
+            case '+':
+                oper = new OperationAdd;//???????
+                break;
+            case '-':
+                oper = new OperationSub;
+                break;
+            case '*':
+                oper = new OperationMul;
+                break;
+            case '/':
+                oper = new OperationDiv;
+                break;
+            default:
+                throw "Unknow operation";
+        }
+        return oper;
     }
 };
 
 int main(int argc, char* argv[])
 {
-    IFactory* operFactory = new AddFactory();
-    Operation* oper = operFactory->CreateOperation();
-    oper->SetValue(1.0,2.0);
+    Operation* oper;
+    double NumberA = 1.0;
+    double NumberB = 0.0;
+    oper = OperationFactory::createOperate('+');
+    oper->SetValue(NumberA, NumberB);
+    //oper:Operation(NumberA, NumberB); ??????ù????????????????????????????????????????????
     double result = oper->GetResult();
+    cout << result << endl;
     return 0;
 }
