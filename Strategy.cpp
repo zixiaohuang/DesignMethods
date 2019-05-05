@@ -1,8 +1,8 @@
 #include <string>
 using namespace std;
 
-//ÀûÓÃFactoryÄ£Ê½
-//¶¨Òå³éÏóÀà
+//åˆ©ç”¨Factoryæ¨¡å¼
+//å®šä¹‰æŠ½è±¡ç±»
 using hash_t = size_t;
 constexpr hash_t prime = 0x100000001B3ull;
 constexpr hash_t basis = 0xCBF29CE484222325ull;
@@ -31,7 +31,7 @@ public:
 	virtual double acceptCash(double money) = 0;
 };
 
-//Õı³£ÊÕ·Ñ×ÓÀà
+//æ­£å¸¸æ”¶è´¹å­ç±»
 class CashNormal :public CashSuper
 {
 public:
@@ -41,7 +41,7 @@ public:
 	}
 };
 
-//´òÕÛÊÕ·Ñ×ÓÀà
+//æ‰“æŠ˜æ”¶è´¹å­ç±»
 class CashRebate :public CashSuper
 {
 private:
@@ -57,12 +57,12 @@ public:
 	}
 };
 
-//·µ»ØÊÕ·Ñ×ÓÀà
+//è¿”å›æ”¶è´¹å­ç±»
 class CashReturn :public CashSuper
 {
 private:
-	double moneyCondition = 0.0;//·µÀûÌõ¼ş
-	double moneyReturn = 0.0;//·µÀûÖµ
+	double moneyCondition = 0.0;//è¿”åˆ©æ¡ä»¶
+	double moneyReturn = 0.0;//è¿”åˆ©å€¼
 public:
 	CashReturn(double moneyCondition, double moneyReturn)
 	{
@@ -72,7 +72,7 @@ public:
 	double acceptCash(double money)
 	{
 		double result = money;
-		if (money >= moneyCondition)//Èô´óÓÚ·µÀûÌõ¼ş£¬ÔòĞèÒª¼õÈ¥·µÀûÖµ
+		if (money >= moneyCondition)//è‹¥å¤§äºè¿”åˆ©æ¡ä»¶ï¼Œåˆ™éœ€è¦å‡å»è¿”åˆ©å€¼
 		{
 			result = money - (money / moneyCondition)*moneyReturn;
 		}
@@ -80,7 +80,7 @@ public:
 	}
 };
 
-//ÏÖ½ğÊÕ·Ñ¹¤³¡
+//ç°é‡‘æ”¶è´¹å·¥åœº
 class CashFactory
 {
 public:
@@ -89,13 +89,13 @@ public:
 		CashSuper* cs;
 		switch (hash_run_time(type))
 		{
-		case hash_compile_time("Õı³£ÊÕ·Ñ"):
+		case hash_compile_time("æ­£å¸¸æ”¶è´¹"):
 			cs = new CashNormal;
 			break;
-		case hash_compile_time("Âú300·µ100"):
+		case hash_compile_time("æ»¡300è¿”100"):
 			cs = new CashReturn(300.0, 100.0);
 			break;
-		case hash_compile_time("´ò8ÕÛ"):
+		case hash_compile_time("æ‰“8æŠ˜"):
 			cs = new CashRebate(0.8);
 			break;
 		}
@@ -103,24 +103,24 @@ public:
 	}
 };
 
-//ÀûÓÃStrategyÄ£Ê½:¶¨ÒåÒ»ÏµÁĞËã·¨µÄ·½·¨£¬¸ÅÄîÉÏÕâĞ©Ëã·¨Íê³ÉµÄ¶¼ÊÇÏàÍ¬µÄ¹¤×÷£¬Ö»ÊÇÊµÏÖ²»Í¬£¬ÒÔÏàÍ¬µÄ·½·¨µ÷ÓÃËùÓĞµÄËã·¨£¬¼õÉÙÁË¸÷ÖÖËã·¨ÀàÓëÊ¹ÓÃËã·¨ÀàÖ®¼äµÄñîºÏ
-//CashSuper,CashNormal,CashRebate,CashReturn¶¼²»ÓÃ¸ü¸Ä,Ö»Òª¼ÓÒ»¸öCashContext
+//åˆ©ç”¨Strategyæ¨¡å¼:å®šä¹‰ä¸€ç³»åˆ—ç®—æ³•çš„æ–¹æ³•ï¼Œæ¦‚å¿µä¸Šè¿™äº›ç®—æ³•å®Œæˆçš„éƒ½æ˜¯ç›¸åŒçš„å·¥ä½œï¼Œåªæ˜¯å®ç°ä¸åŒï¼Œä»¥ç›¸åŒçš„æ–¹æ³•è°ƒç”¨æ‰€æœ‰çš„ç®—æ³•ï¼Œå‡å°‘äº†å„ç§ç®—æ³•ç±»ä¸ä½¿ç”¨ç®—æ³•ç±»ä¹‹é—´çš„è€¦åˆ
+//CashSuper,CashNormal,CashRebate,CashReturnéƒ½ä¸ç”¨æ›´æ”¹,åªè¦åŠ ä¸€ä¸ªCashContext
 class CashContext
 {
 private:
 	CashSuper* cs;
 public:
 	CashContext(const char* type)
-	{//²ßÂÔÄ£Ê½Óë¹¤³§Ä£Ê½½áºÏ
+	{//ç­–ç•¥æ¨¡å¼ä¸å·¥å‚æ¨¡å¼ç»“åˆ
 		switch (hash_run_time(type))
 		{
-		case hash_compile_time("Õı³£ÊÕ·Ñ"):
+		case hash_compile_time("æ­£å¸¸æ”¶è´¹"):
 			cs = new CashNormal;
 			break;
-		case hash_compile_time("Âú300·µ100"):
+		case hash_compile_time("æ»¡300è¿”100"):
 			cs = new CashReturn(300.0, 100.0);
 			break;
-		case hash_compile_time("´ò8ÕÛ"):
+		case hash_compile_time("æ‰“8æŠ˜"):
 			cs = new CashRebate(0.8);
 			break;
 		}
